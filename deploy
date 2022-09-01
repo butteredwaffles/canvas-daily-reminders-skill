@@ -1,0 +1,2 @@
+zip a -aoa deploy.zip ./venv/Lib/site-packages/* lambda_function.py
+aws lambda update-function-code --function-name CanvasDailyReminderSkill --zip-file fileb://deploy.zip
