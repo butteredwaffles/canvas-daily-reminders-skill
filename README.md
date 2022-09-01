@@ -1,7 +1,7 @@
 # CanvasReminderSkill
 
 For use with Amazon Alexa and Clemson students. Loads upcoming calendar events and reads out due dates for today and tomorrow.
-Designed to be used with routines so it can be automatically played upon starting the day.
+Designed to be used with routines so it can be automatically played upon starting the day. Currently designed for single-user.
 
 ## Requirements:
 - Python 3.9

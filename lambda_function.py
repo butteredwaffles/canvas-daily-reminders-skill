@@ -32,8 +32,6 @@ def get_events():
 
     canvas = Canvas(API_URL, API_KEY)
     assignments = []
-    todays = 0
-    tomorrows = 0
     for event in canvas.get_upcoming_events():
         time = datetime.fromisoformat(event["end_at"][:-1]).replace(tzinfo=pytz.UTC).astimezone(eastern)
         assignment_name = event['title']
@@ -84,16 +82,17 @@ def hello_world_intent_handler(handler_input):
     handler_input.response_builder.speak(speech_text).set_card(
         SimpleCard("Assignments", speech_text)).set_should_end_session(
         True)
+    user_id = request_envelope.context.system.user.user_id
+    print(f"(USER: {user_id.strip() if user_id else 'INVALID'}) Loaded {num_assignments} assignments for user {name}.")
     return handler_input.response_builder.response
 
 
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.HelpIntent"))
 def help_intent_handler(handler_input):
     # type: (HandlerInput) -> Response
-    speech_text = "You can say hello to me!"
+    speech_text = "I can read you Canvas assignments that are close to their due date. Ask me 'what's due!'"
 
-    handler_input.response_builder.speak(speech_text).ask(speech_text).set_card(
-        SimpleCard("Hello World", speech_text))
+    handler_input.response_builder.speak(speech_text).ask(speech_text)
     return handler_input.response_builder.response
 
 
@@ -105,9 +104,7 @@ def cancel_and_stop_intent_handler(handler_input):
     # type: (HandlerInput) -> Response
     speech_text = "Goodbye!"
 
-    handler_input.response_builder.speak(speech_text).set_card(
-        SimpleCard("Hello World", speech_text)).set_should_end_session(
-        True)
+    handler_input.response_builder.speak(speech_text).set_should_end_session(True)
     return handler_input.response_builder.response
 
 
