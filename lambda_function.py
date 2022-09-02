@@ -57,13 +57,13 @@ def hello_world_intent_handler(handler_input):
     except Exception as e:
         traceback.print_exc()
         name = "human"
+    speech_text = f"Hello {name}! Here's your due assignments: <break time=\"1s\"/>"
     assignments = get_events()
     if not (permissions and permissions.consent_token):
         return (handler_input.response_builder.speak(
             "Please give permissions to speak your given name using the alexa app.")
                 .set_card(AskForPermissionsConsentCard(permissions=["alexa::profile:given_name:read"]))
                 .response)
-    speech_text = f"Hello {name}! Here's your due assignments: "
     todays = 0
     for assignment in assignments:
         date = 'today' if datetime.now(tz=eastern).day == assignment.end_date.day else 'tomorrow'
@@ -72,13 +72,13 @@ def hello_world_intent_handler(handler_input):
         speech_text += f"<emphasis>{assignment.assignment_name}</emphasis> for {assignment.class_name}, is due {date} at {assignment.end_date.strftime('%I:%M%p')}. <break time=\"1s\"/>"
     num_assignments = len(assignments)
     if num_assignments == 0:
-        "You don't have anything due today or tomorrow! Lucky! "
+        speech_text += "You don't have anything due today or tomorrow! Lucky! "
     else:
         if todays == 0:
-            speech_text += "You don't have anything due today."
+            speech_text += "You don't have anything due today. "
         if num_assignments - todays == 0:
             speech_text += "You don't have anything due tomorrow. "
-    speech_text += "Good luck!"
+        speech_text += "Good luck!"
     handler_input.response_builder.speak(speech_text).set_card(
         SimpleCard("Assignments", speech_text)).set_should_end_session(
         True)
